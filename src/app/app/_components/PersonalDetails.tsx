@@ -85,7 +85,7 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep, role }: PersonalDetai
            
             const uoResponse = await sendUserOperation({
                   uo: {
-                    target: '0xFB237BC38372A9F2C53BB7Bc996C4fcb9B5b9c47',
+                    target: '0x550E63385Cc85B2d565D96a9E61eBA47642d1DAb',
                     data: uoCallData,
                   }
                 }, {
