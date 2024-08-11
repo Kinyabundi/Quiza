@@ -8,19 +8,40 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "type": "module",
   "dependencies": {
+    "@alchemy/aa-accounts": "3.14.1",
+    "@alchemy/aa-alchemy": "^3.19.0",
+    "@alchemy/aa-core": "3.12.3",
+    "@hookform/resolvers": "^3.9.0",
+    "@nextui-org/react": "^2.4.6",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@tanstack/react-query": "^5.51.23",
+    "classnames": "^2.5.1",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
+    "framer-motion": "^11.3.24",
+    "lucide-react": "^0.427.0",
+    "next": "^14.2.5",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "react-hook-form": "^7.52.2",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.2.1",
+    "tailwind-merge": "^2.4.0",
+    "viem": "2.8.6",
+    "web3": "^4.11.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "typescript": "^5"
   }
 }
