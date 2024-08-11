@@ -13,8 +13,8 @@ const RoleSelectModal: React.FC<RoleSelectModalProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   const navigateWithRole = (role: 'client' | 'freelancer' | '') => {
-    onClose(); // Close the modal
-    router.push("/app/profile");
+    onClose(); 
+    router.push(`app/${role}/onboarding`);
   };
 
   return (
@@ -25,13 +25,13 @@ const RoleSelectModal: React.FC<RoleSelectModalProps> = ({ isOpen, onClose }) =>
         <div className="flex justify-around">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => navigateWithRole('')}
+            onClick={() => navigateWithRole('client')}
           >
             Client
           </button>
           <button
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
-            onClick={() => navigateWithRole('')}
+            onClick={() => navigateWithRole('freelancer')}
           >
             Freelancer
           </button>

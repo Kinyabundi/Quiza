@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import  GetStarted  from "@/app/app/_components/ProfileCard";
+import  GetStarted  from "@/app/app/_components/FreelancerProfile";
 
 export const metadata: Metadata = {
 	title: "Login",

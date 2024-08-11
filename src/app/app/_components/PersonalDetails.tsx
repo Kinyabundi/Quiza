@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { InferType, object, string } from "yup";
 import { ethers } from 'ethers';
-import { useSendUserOperation, useSignMessage, useSmartAccountClient, useWaitForUserOperationTransaction } from "@alchemy/aa-alchemy/react";
+import { useSendUserOperation, useSignMessage, useSmartAccountClient } from "@alchemy/aa-alchemy/react";
 import { encodeFunctionData } from 'viem';
 import {
     chain,
@@ -20,6 +20,7 @@ import {
 import toast from "react-hot-toast";
 import { Controller } from 'react-hook-form';
 import { useChain } from "@alchemy/aa-alchemy/react";
+import {profileABI} from "@/abi/profileAbi"
 
 // Define the schema for personal details validation
 const personalDetailsSchema = object({
@@ -30,9 +31,10 @@ const personalDetailsSchema = object({
 interface PersonalDetailsProps {
     goToPreviousStep: () => void;
     goToNextStep: () => void;
+    role: "Freelancer" | "Client";
 }
 
-const PersonalDetails = ({ goToPreviousStep, goToNextStep }: PersonalDetailsProps) => {
+const PersonalDetails = ({ goToPreviousStep, goToNextStep, role }: PersonalDetailsProps) => {
     const { chain, setChain } = useChain();
     const formMethods = useForm({ resolver: yupResolver(personalDetailsSchema) });
     const { handleSubmit, reset, control } = formMethods;
@@ -44,11 +46,6 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep }: PersonalDetailsProp
         type: "MultiOwnerModularAccount",
     });
 
-    // const { client } = useSmartAccountClient({
-    //     type: accountType,
-    //     // gasManagerConfig,
-    //     // opts,
-    // });
     const {
         sendUserOperation,
         sendUserOperationResult,
@@ -56,263 +53,7 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep }: PersonalDetailsProp
         error: isSendUserOperationError,
     } = useSendUserOperation({ client, waitForTxn: true });
 
-    const ABI = [ 
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "user",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "paymentDetails",
-                    "type": "string"
-                }
-            ],
-            "name": "PaymentDetailsAdded",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "user",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "portfolioHash",
-                    "type": "string"
-                }
-            ],
-            "name": "PortfolioUploaded",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "user",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "email",
-                    "type": "string"
-                }
-            ],
-            "name": "ProfileCreated",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "user",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "newScore",
-                    "type": "uint256"
-                }
-            ],
-            "name": "ReputationUpdated",
-            "type": "event"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "string",
-                    "name": "_paymentDetails",
-                    "type": "string"
-                }
-            ],
-            "name": "addPaymentDetails",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "string",
-                    "name": "_name",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "_email",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "_phoneNumber",
-                    "type": "string"
-                }
-            ],
-            "name": "createProfile",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_user",
-                    "type": "address"
-                }
-            ],
-            "name": "getUserProfile",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_user",
-                    "type": "address"
-                }
-            ],
-            "name": "incrementJobCount",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_user",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_newScore",
-                    "type": "uint256"
-                }
-            ],
-            "name": "updateReputation",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "string",
-                    "name": "_portfolioHash",
-                    "type": "string"
-                }
-            ],
-            "name": "uploadPortfolio",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "userProfiles",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "email",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "phoneNumber",
-                    "type": "string"
-                },
-                {
-                    "internalType": "address",
-                    "name": "userAddress",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "reputationScore",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "jobsCompleted",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "portfolioHash",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ]
+
 
     const onSubmit = async (data: InferType<typeof personalDetailsSchema>) => {
         const id = toast.loading("Sending user operation...");
@@ -325,46 +66,46 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep }: PersonalDetailsProp
             }
             console.log(chain)
 
+            const roleMapping = {
+               Client: 0,
+               Freelancer: 1,
+            };
+
+            const numericRole = roleMapping[role];
+    
+
             // Using `encodeFunctionData` from `viem`
             const uoCallData = encodeFunctionData({
-                abi: ABI,
+                abi: profileABI,
                 functionName: 'createProfile',
-                args: [data.name, user?.email, data.phone]
+                args: [data.name, user?.email, data.phone, numericRole]
             });
-            const testCallData = encodeFunctionData({
-                abi: ABI,
-                functionName: 'createProfile',
-                args: ["Christine", "christine@kotanipay.com", "0769686091"] 
-            });
-            console.log("testCall", testCallData); 
             
             console.log(uoCallData)
            
             const uoResponse = await sendUserOperation({
                   uo: {
-                    target: '0x55E4A812a7Cf4E315F5D38D8573F5f910D853e83',
+                    target: '0xFB237BC38372A9F2C53BB7Bc996C4fcb9B5b9c47',
                     data: uoCallData,
                   }
                 }, {
                     onSuccess: ({ hash }) => {
                         toast.success("Account Created")
-                    console.log(hash); // This is the transaction hash
-                    // Optionally, wait for the transaction to be mined here if needed
-                    // Example: const receipt = await ethers.provider.waitForTransaction(hash);
-                    // Note: You need to replace `ethers.provider` with your actual provider instance
+                toast.dismiss(id)
+                    console.log(hash); 
+                    goToNextStep()
                 },
                 onError: (error) => {
-                    toast.error("Failed to Created Account")
+                    toast.error("Failed to Created Account",)
                     console.error(error);
                 },
                 });
 
-        } catch (error) {
-            console.error("Detailed Error" ,error)
-        } finally {
-            setLoading(false)
-            toast.dismiss(id)
-        }
+            } catch (error) {
+                console.error("Detailed Error" ,error)
+            } finally {
+                setLoading(false)
+            }
     }
 
     return (
@@ -407,6 +148,7 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep }: PersonalDetailsProp
                             />
                         )}
                     />
+                    
                     <Button type="submit" disabled={isSendingUserOperation}>
                     {isSendingUserOperation ? "Creating..." : "Create Account"}
                     </Button>

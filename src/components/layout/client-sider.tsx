@@ -79,7 +79,7 @@ const LogOutBtn = () => {
 	)
 }
 
-const Sider = () => {
+const ClientSider = () => {
 	return (
 		<div className="hidden md:flex flex-col w-[14rem]  border-r border-gray-200 h-screen overflow-y-auto">
 			<div className="flex flex-row gap-4 items-center">
@@ -90,8 +90,8 @@ const Sider = () => {
 			</div>
 			<div className="flex flex-col mt-8 space-y-6 p-6">
 				<LinkItem title="Profile" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
-				<LinkItem title="Jobs" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
-				<LinkItem title="My Jobs" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
+				<LinkItem title="Post Job" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
+				<LinkItem title="Review JOb" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
 				<LogOutBtn />
 			</div>
 		</div>
@@ -100,4 +100,4 @@ const Sider = () => {
 
 
 
-export default Sider;
+export default ClientSider;
