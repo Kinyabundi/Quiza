@@ -6,6 +6,7 @@ import PersonalDetails from "./PersonalDetails";
 import PaymentDetails from "./PaymentDetails";
 import UploadPortifolio from "./UploadPortifolio";
 import { Button } from "@nextui-org/react";
+import Finish from "./GoToFreelanceDashboard";
 
 const steps: StepItem[] = [
   {
@@ -17,6 +18,9 @@ const steps: StepItem[] = [
   {
     title: "PaymentDetails",
   },
+  {
+    title: "Go To Dashboard"
+  }
 
 ];
 
@@ -43,18 +47,21 @@ const GetStarted = () => {
             {activeStep === 2 && (
               <PaymentDetails goToPreviousStep={goToPreviousStep} goToNextStep={goToNextStep} />
             )}
+            {activeStep === 3 && (
+              <Finish />
+            )}
             <div className="flex flex-row mt-6 gap-3 justify-between">
-         <Button className="rounded-r-full rounded-bl-full justify-start border " onClick={goToPreviousStep} type="button">
-						Back
-					</Button>
-          <Button  className="rounded-r-full rounded-bl-full justify-end border" onClick={goToNextStep} type="button">
-						Next
-					</Button>
-         </div>
+              <Button className="rounded-r-full rounded-bl-full justify-start border " onClick={goToPreviousStep} type="button">
+                Back
+              </Button>
+              <Button className="rounded-r-full rounded-bl-full justify-end border" onClick={goToNextStep} type="button">
+                Next
+              </Button>
+            </div>
           </div>
-          
+
         </div>
-       
+
       </div>
     </>
   )
