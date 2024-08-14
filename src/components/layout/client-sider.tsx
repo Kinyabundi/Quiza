@@ -89,9 +89,9 @@ const ClientSider = () => {
 				</div>
 			</div>
 			<div className="flex flex-col mt-8 space-y-6 p-6">
-				<LinkItem title="Profile" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
-				<LinkItem title="Post Job" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
-				<LinkItem title="Review JOb" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="profile" />
+				<LinkItem title="Profile" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="/client/profile" />
+				<LinkItem title="Post Job" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="/client/createjob" />
+				<LinkItem title="Review JOb" icon={<LayoutDashboard className="text-[#cbceeb]" size={18} />} href="/client/reviewjob" />
 				<LogOutBtn />
 			</div>
 		</div>

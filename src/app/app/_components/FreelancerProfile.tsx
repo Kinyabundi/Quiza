@@ -42,13 +42,12 @@ const GetStarted = () => {
             )}
             {activeStep === 1 && (
               <UploadPortifolio goToPreviousStep={goToPreviousStep} goToNextStep={goToNextStep} />
-
             )}
             {activeStep === 2 && (
               <PaymentDetails goToPreviousStep={goToPreviousStep} goToNextStep={goToNextStep} />
             )}
             {activeStep === 3 && (
-              <Finish />
+              <Finish   />
             )}
             <div className="flex flex-row mt-6 gap-3 justify-between">
               <Button className="rounded-r-full rounded-bl-full justify-start border " onClick={goToPreviousStep} type="button">

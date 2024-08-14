@@ -12,7 +12,6 @@ import { profileABI } from '@/abi/profileAbi';
 import { useRouter } from 'next/navigation';
 
 
-
 const Finish = () => {
 
   const { user } = useAuth();

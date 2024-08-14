@@ -46,8 +46,9 @@ const UploadPortifolio = ({ goToPreviousStep, goToNextStep }: PersonalDetailsPro
     }
   
     const id = toast.loading("Uploading...");
-    setLoading(true);
     try {
+    setLoading(true);
+
       // Using `encodeFunctionData` from `viem`
       const uoCallData = encodeFunctionData({
         abi: profileABI,
@@ -59,7 +60,7 @@ const UploadPortifolio = ({ goToPreviousStep, goToNextStep }: PersonalDetailsPro
 
       const uoResponse = await sendUserOperation({
         uo: {
-          target: '0x550E63385Cc85B2d565D96a9E61eBA47642d1DAb',
+          target: '0x1988B6eD414f0becE93945086DE8E8269D22ce9e',
           data: uoCallData,
         }
       }, {
@@ -77,6 +78,7 @@ const UploadPortifolio = ({ goToPreviousStep, goToNextStep }: PersonalDetailsPro
     console.error("Detailed Error" ,error)
 } finally {
     setLoading(false)
+    toast.dismiss(id)
 }
   }
 
@@ -117,10 +119,10 @@ const UploadPortifolio = ({ goToPreviousStep, goToNextStep }: PersonalDetailsPro
           disabled={loading}
           onClick={() => uploadFile()}
         >
-          {loading && (
+          {isSendingUserOperation && (
             <Loader2 className="w-6 h-6 mr-2 animate-spin" />
           )}
-          {loading ? "Importing..." : "Import"}
+          {isSendingUserOperation ? "Importing..." : "Import"}
         </Button>
         {fileName && (
           <p className="text-sm font-bold text-[#1336EA] ">

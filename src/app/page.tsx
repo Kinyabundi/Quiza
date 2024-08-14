@@ -22,12 +22,14 @@ import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { useEffect, useState } from "react";
 import RoleSelectModal from "@/components/modal/roles"
+import { useAuth } from "@/context/AuthContext";
+import { profileABI } from "@/abi/profileAbi";
 
 
 export default function Home() {
   const router = useRouter();
   const { logout } = useLogout();
-  const user = useUser();
+  const {user} = useAuth();
   const { address } = useAccount({ type: accountType });
   const [showRoleSelectModal, setShowRoleSelectModal] = useState(false);
 
@@ -42,28 +44,59 @@ const toggleRoleSelectModal = () => {
   setShowRoleSelectModal(!showRoleSelectModal);
 };
 
-  // Function to fetch balance
-  async function fetchBalance(address: any) {
-    // Create a provider connected to the Ethereum network
-    const provider = new ethers.JsonRpcProvider('https://base-sepolia.g.alchemy.com/v2/jEqDwqSmkkqljpS_z42AzFhxfGYnCwwO')
 
-    try {
-      // Fetch the balance of the address
-      const balance = await provider.getBalance(address);
+const getUser = async () => {
+  const params = {
+    address: user?.address,
+  };
 
-      // Convert the balance from wei to ether
-      const balanceInEther = ethers.formatEther(balance);
+  const contractAddress = process.env.CONTRACT_ADDRESS!;
+  const provider = new ethers.JsonRpcProvider('https://base-sepolia.g.alchemy.com/v2/jEqDwqSmkkqljpS_z42AzFhxfGYnCwwO');
+  const contract = new ethers.Contract("0x1988B6eD414f0becE93945086DE8E8269D22ce9e", profileABI, provider);
 
-      console.log(`Balance: ${balanceInEther} ETH`);
-      console.log(address)
-    } catch (error) {
-      console.error('Failed to fetch balance:', error);
+
+
+  try {
+    console.log(user?.address)
+    const userDetails = await contract.getUserProfile(user?.address);
+  
+    console.log(userDetails);
+
+    if (!userDetails[0]) {
+      console.log('No user details found for address', user?.address);
+      router.push('/');
+      return;
     }
-  }
-  useEffect(() => {
-    fetchBalance(address)
 
-  })
+    const roleMapping: {[key:string]: number} = {
+      Client: 0,
+      Freelancer: 1,
+    };
+    // Extracting the role from the last element of userDetails
+    const roleNumeric = Number(userDetails[userDetails.length - 1]);
+    console.log(roleNumeric)
+    const roleString = Object.keys(roleMapping).find(key => roleMapping[key] === roleNumeric);
+
+    console.log(roleString)
+
+    // Redirect based on the role
+    if (roleString === 'Freelancer') {
+      router.push('/app/freelancer/profile'); 
+    } else if (roleString === 'Client') {
+      router.push('/app/client/profile'); 
+    } else {
+      router.push('/');
+    }
+  } catch (error) {
+    console.error('Failed to fetch user details:', error);
+    // Handle error, e.g., show an error message
+  }
+};
+
+useEffect(() => {
+  getUser();
+}, [user]);
+
   return (
     <>
       <Head>

@@ -1,5 +1,4 @@
 
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/AuthContext';
@@ -14,7 +13,7 @@ import { encodeFunctionData } from 'viem';
 import {
     chain,
     accountType,
-    gasManagerConfig,
+  gasManagerConfig,
     accountClientOptions as opts,
 } from "@/lib/config";
 import toast from "react-hot-toast";
@@ -44,6 +43,8 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep, role }: PersonalDetai
     // Initialize the Smart Account Client
     const {client} = useSmartAccountClient({
         type: "MultiOwnerModularAccount",
+        gasManagerConfig,
+        opts,
     });
 
     const {
@@ -56,15 +57,10 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep, role }: PersonalDetai
 
 
     const onSubmit = async (data: InferType<typeof personalDetailsSchema>) => {
-        const id = toast.loading("Sending user operation...");
-        setLoading(true);
+        const id = toast.loading("Creating account...");
+       
         try {
-            const payload = {
-                name: data.name,
-                phone: data.phone,
-                email: user?.email,
-            }
-            console.log(chain)
+            setLoading(true);
 
             const roleMapping = {
                Client: 0,
@@ -73,8 +69,6 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep, role }: PersonalDetai
 
             const numericRole = roleMapping[role];
     
-
-            // Using `encodeFunctionData` from `viem`
             const uoCallData = encodeFunctionData({
                 abi: profileABI,
                 functionName: 'createProfile',
@@ -82,18 +76,18 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep, role }: PersonalDetai
             });
             
             console.log(uoCallData)
+  const contractAddress = process.env.CONTRACT_ADDRESS!;
            
             const uoResponse = await sendUserOperation({
                   uo: {
-                    target: '0x550E63385Cc85B2d565D96a9E61eBA47642d1DAb',
+                    target: '0x1988B6eD414f0becE93945086DE8E8269D22ce9e',
                     data: uoCallData,
                   }
                 }, {
                     onSuccess: ({ hash }) => {
                         toast.success("Account Created")
-                toast.dismiss(id)
                     console.log(hash); 
-                    goToNextStep()
+                goToNextStep()
                 },
                 onError: (error) => {
                     toast.error("Failed to Created Account",)
@@ -105,6 +99,7 @@ const PersonalDetails = ({ goToPreviousStep, goToNextStep, role }: PersonalDetai
                 console.error("Detailed Error" ,error)
             } finally {
                 setLoading(false)
+                toast.dismiss(id)
             }
     }
 

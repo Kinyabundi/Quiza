@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import CreateJob from "./CreateJob";
+import MyProfile from "./MyProfile";
 
 export const metadata: Metadata = {
-	title: "Create Job",
+	title: "My Profile",
 };
 
 export default function page() {
-	return <CreateJob />;
+	return <MyProfile />;
 }
